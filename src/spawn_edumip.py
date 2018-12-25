@@ -32,7 +32,7 @@ class Edumip:
         
     def move(self):
 
-	rospy.sleep(3)
+	rospy.sleep(5)
 
 	if self.name != self.general_goal_name:
 		self.trade()
@@ -48,18 +48,22 @@ class Edumip:
 				x_goal = self.edumips[self.local_goal_name][0]
 				y_goal = self.edumips[self.local_goal_name][1]
 
-				if self.get_distance(x_goal, y_goal, self.edumips[self.name][0], self.edumips[self.name][1]) > 0.5:
+				if self.get_distance(x_goal, y_goal, self.x, self.y) > 0.25:
+
+					if abs(math.atan2(y_goal - self.y, x_goal - self.x) - self.theta) > 0.15
 					
-        				self.geometry_msg.angular.z = 6 * (math.atan2(y_goal - self.y, x_goal - self.x) - self.edumips[self.name][2])
-        				self.geometry_msg.linear.x = 1.5 * self.get_distance(x_goal, y_goal, self.turtles[self.name][0], self.edumips[self.name][1])
+        					self.geometry_msg.angular.z = 0.2
+        					self.geometry_msg.linear.x = 0.1
+
+					else:
+        					self.geometry_msg.angular.z = 0
+        					self.geometry_msg.linear.x = 0.1			
+							
 				else:
 					self.geometry_msg.angular.z = 0
         				self.geometry_msg.linear.x = 0
 
         			self.velocity_publisher.publish(self.geometry_msg)
-				rospy.sleep(0.2)
-
-				
 
     def callback_pose(self, data):
 
