@@ -3,8 +3,9 @@
 import rospy
 import math
 import geometry_msgs.msg
-from edumip_mas.msg import base_message
-from edumip_mas.msg import status
+from turtlesim.srv import Spawn
+from mas_framework.msg import base_message
+from mas_framework.msg import status
 import turtlesim.msg
 import time
 
@@ -37,33 +38,47 @@ class Edumip:
 	if self.name != self.general_goal_name:
 		self.trade()
 
-	self.status = "move"
+        while not rospy.is_shutdown():
+		
 
-	while not rospy.is_shutdown():
+                if self.name != self.general_goal_name:
 
-		if self.name != self.general_goal_name:
 
-			if self.status == "move":
-					
-				x_goal = self.edumips[self.local_goal_name][0]
-				y_goal = self.edumips[self.local_goal_name][1]
+                                x_goal = self.edumips[self.local_goal_name][0]
+                                y_goal = self.edumips[self.local_goal_name][1]
 
-				if self.get_distance(x_goal, y_goal, self.x, self.y) > 0.25:
+				dis = self.get_distance(x_goal, y_goal, self.x, self.y)
 
-					if abs(math.atan2(y_goal - self.y, x_goal - self.x) - self.theta) > 0.15
-					
-        					self.geometry_msg.angular.z = 0.2
-        					self.geometry_msg.linear.x = 0.1
+                                if dis > 0.2:
 
-					else:
-        					self.geometry_msg.angular.z = 0
-        					self.geometry_msg.linear.x = 0.1			
-							
-				else:
-					self.geometry_msg.angular.z = 0
-        				self.geometry_msg.linear.x = 0
+                                        phi = math.atan2(self.x - x_goal, y_goal - self.y, )
 
-        			self.velocity_publisher.publish(self.geometry_msg)
+                                        theta = self.theta
+                                        delta = phi - theta
+
+					rospy.loginfo(" Phi " + str(phi) + " theta " + str(theta) + " delta " + str(delta))
+
+                                        if abs(delta) > 0.4:
+
+						if delta < math.pi:
+
+							self.geometry_msg.angular.z = 0.1	
+
+						else:
+							self.geometry_msg.angular.z = -0.1			
+	
+                                                self.geometry_msg.linear.x = 0.1
+         
+                                        else:
+                                                rospy.loginfo("go")
+                                                self.geometry_msg.linear.x = 0.2
+                                                self.geometry_msg.angular.z = 0 
+                                        
+                                else:
+                                        self.geometry_msg.angular.z = 0
+                                        self.geometry_msg.linear.x = 0
+
+                                self.velocity_publisher.publish(self.geometry_msg)
 
     def callback_pose(self, data):
 
