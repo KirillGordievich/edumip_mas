@@ -58,14 +58,24 @@ class Edumip:
 
 					rospy.loginfo(" Phi " + str(phi) + " theta " + str(theta) + " delta " + str(delta))
 
-                                        if abs(delta) > 0.4:
+                                        if abs(delta) > 0.2:
+						
+						if delta > 0:
 
-						if delta < math.pi:
+							if delta < math.pi:
 
-							self.geometry_msg.angular.z = 0.1	
+								self.geometry_msg.angular.z = 0.1	
+
+							else:
+								self.geometry_msg.angular.z = -0.1
 
 						else:
-							self.geometry_msg.angular.z = -0.1			
+							if delta > -math.pi:
+
+								self.geometry_msg.angular.z = -0.1	
+
+							else:
+								self.geometry_msg.angular.z = 0.1			
 	
                                                 self.geometry_msg.linear.x = 0.1
          
