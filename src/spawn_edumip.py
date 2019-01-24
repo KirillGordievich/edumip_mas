@@ -49,7 +49,7 @@ class Edumip:
 
 				dis = self.get_distance(x_goal, y_goal, self.x, self.y)
 
-                                if dis > 0.2:
+                                if dis > 0.08:
 
                                         phi = math.atan2(self.x - x_goal, y_goal - self.y, )
 
@@ -58,37 +58,54 @@ class Edumip:
 
 					rospy.loginfo(" Phi " + str(phi) + " theta " + str(theta) + " delta " + str(delta))
 
-                                        if abs(delta) > 0.2:
-						
-						if delta > 0:
+					if abs(delta) > 0.2:
 
-							if delta < math.pi:
-
-								self.geometry_msg.angular.z = 0.1	
-
+						if phi > 0:
+							
+							if theta > 0:
+								
+								if delta > 0:
+									string = "phi > 0 delta > 0  z = -1"
+        								self.geometry_msg.angular.z = -1
+        								self.geometry_msg.linear.x = 1
+								else:
+									string = "phi > 0 delta > 0  z = 1"
+        								self.geometry_msg.angular.z = 1
+        								self.geometry_msg.linear.x = 1
 							else:
-								self.geometry_msg.angular.z = -0.1
+								if delta > math.pi:
 
+        								self.geometry_msg.angular.z = 1
+        								self.geometry_msg.linear.x = 1
+								else:
+        								self.geometry_msg.angular.z = -1
+        								self.geometry_msg.linear.x = 1
 						else:
-							if delta > -math.pi:
+							if theta > 0:
+								
+								if delta > -math.pi:
 
-								self.geometry_msg.angular.z = -0.1	
-
+        								self.geometry_msg.angular.z = 1
+        								self.geometry_msg.linear.x = 1
+								else:
+        								self.geometry_msg.angular.z = -1
+        								self.geometry_msg.linear.x = 1
 							else:
-								self.geometry_msg.angular.z = 0.1			
-	
-                                                self.geometry_msg.linear.x = 0.1
-         
-                                        else:
-                                                rospy.loginfo("go")
-                                                self.geometry_msg.linear.x = 0.2
-                                                self.geometry_msg.angular.z = 0 
-                                        
-                                else:
-                                        self.geometry_msg.angular.z = 0
-                                        self.geometry_msg.linear.x = 0
+								if delta > 0:
 
-                                self.velocity_publisher.publish(self.geometry_msg)
+        								self.geometry_msg.angular.z = -1
+        								self.geometry_msg.linear.x = 1
+								else:
+        								self.geometry_msg.angular.z = 1
+        								self.geometry_msg.linear.x = 1							
+					else:
+	        				self.geometry_msg.angular.z = 0
+        					self.geometry_msg.linear.x = 2	
+				else:
+					self.geometry_msg.angular.z = 0
+        				self.geometry_msg.linear.x = 0
+					
+        			self.velocity_publisher.publish(self.geometry_msg)
 
     def callback_pose(self, data):
 
