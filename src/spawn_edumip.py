@@ -20,7 +20,7 @@ class Edumip:
 	self.base_msg = base_message()
 	self.geometry_msg = geometry_msgs.msg.Twist()
         self.subscriber_pose = rospy.Subscriber("/" + str(self.name) + "/edumip/pose", turtlesim.msg.Pose, self.callback_pose, queue_size = 1)
-        self.velocity_publisher = rospy.Publisher("/robot" + str(self.number) + "/edumip/cmd_vel", geometry_msgs.msg.Twist, queue_size = 1)
+        self.velocity_publisher = rospy.Publisher("/robot" + str(self.number) + "/edumip/cmd", geometry_msgs.msg.Twist, queue_size = 1)
 	self.coordinate_publisher = rospy.Publisher("/environment", base_message, queue_size=1)
 	self.subscriber_coordinate = rospy.Subscriber("/environment", base_message, self.callback_coordinate, queue_size = 10)
 	self.subscriber_status_msg = rospy.Subscriber("/status", status, self.callback_status, queue_size = 1)
@@ -48,7 +48,7 @@ class Edumip:
                                 y_goal = self.edumips[self.local_goal_name][1]
 
 				dis = self.get_distance(x_goal, y_goal, self.x, self.y)
-
+				k = 0.2 
                                 if dis > 0.08:
 
                                         phi = math.atan2(self.x - x_goal, y_goal - self.y, )
@@ -68,44 +68,44 @@ class Edumip:
 
                                                                         if delta > 0:
 
-                                                                                self.geometry_msg.angular.z = 0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = k
+                                                                                self.geometry_msg.linear.x = k
                                                                         else:
-                                                                                self.geometry_msg.angular.z = -0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = -k
+                                                                                self.geometry_msg.linear.x = k
                                                                 else:
                                                                         if delta > math.pi:
 
-                                                                                self.geometry_msg.angular.z = -0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = -k
+                                                                                self.geometry_msg.linear.x = k
                                                                         else:
-                                                                                self.geometry_msg.angular.z = 0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = k
+                                                                                self.geometry_msg.linear.x = k
                                                         else:
                                                                 if theta > 0:
 
                                                                         if delta > -math.pi:
 
-                                                                                self.geometry_msg.angular.z = -0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = -k
+                                                                                self.geometry_msg.linear.x = k
                                                                         else:
-                                                                                self.geometry_msg.angular.z = 0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = k
+                                                                                self.geometry_msg.linear.x = k
                                                                 else:
                                                                         if delta > 0:
 
-                                                                                self.geometry_msg.angular.z = 0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = k
+                                                                                self.geometry_msg.linear.x = k
                                                                         else:
-                                                                                self.geometry_msg.angular.z = -0.1
-                                                                                self.geometry_msg.linear.x = 0.1
+                                                                                self.geometry_msg.angular.z = -k
+                                                                                self.geometry_msg.linear.x = k
                                                 else:
                                                         self.geometry_msg.angular.z = 0
-                                                        self.geometry_msg.linear.x = 0.1
+                                                        self.geometry_msg.linear.x = k
 
                                         else:
                                                 self.geometry_msg.angular.z = 0
-                                                self.geometry_msg.linear.x = 0.1
+                                                self.geometry_msg.linear.x = k
                                 else:
                                         self.geometry_msg.angular.z = 0
                                         self.geometry_msg.linear.x = 0
