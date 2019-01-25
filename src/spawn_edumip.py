@@ -51,7 +51,7 @@ class Edumip:
 				k = 0.2 
                                 if dis > 0.08:
 
-                                        phi = math.atan2(self.x - x_goal, y_goal - self.y, )
+                                        phi = math.atan2(self.x - x_goal, y_goal - self.y)
 
                                         theta = self.theta
                                         delta = phi - theta
