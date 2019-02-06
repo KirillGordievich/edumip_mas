@@ -4,8 +4,8 @@ import rospy
 import math
 import geometry_msgs.msg
 from turtlesim.srv import Spawn
-from mas_framework.msg import base_message
-from mas_framework.msg import status
+from edumip_mas.msg import base_message
+from edumip_mas.msg import status
 import turtlesim.msg
 import time
 
@@ -33,7 +33,7 @@ class Edumip:
         
     def move(self):
 
-	rospy.sleep(5)
+	rospy.sleep(3)
 
 	if self.name != self.general_goal_name:
 		self.trade()
