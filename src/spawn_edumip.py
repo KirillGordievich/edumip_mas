@@ -58,9 +58,9 @@ class Edumip:
 
 					rospy.loginfo(" Phi " + str(phi) + " theta " + str(theta) + " delta " + str(delta))
 
-					if abs(delta) > 0.3:
+					if abs(delta) > 0.2:
 
-                                                if abs(delta) < 5.9:
+                                                if abs(delta) < 6:
 
                                                         if phi > 0:
 
